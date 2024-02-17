@@ -1,0 +1,50 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "0: CMake",
+            "type": "shell",
+            "command": "docker run --rm --privileged -v C:/Dev/code-test:/Dev/code-test gcc cmake -DCMAKE_BUILD_TYPE=Debug ..",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "1: Start debug container",
+            "type": "shell",
+            "command": "docker run --rm --privileged -v C:/Dev/code-test:/Dev/code-test --name debug_vsc -it gcc",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "2: (Re-) Build",
+            "type": "shell",
+            "command": "docker run --rm --privileged -v C:/Dev/code-test:/Dev/code-test gcc cmake --build .",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": [
+                    "relative",
+                    "${workspaceFolder}"
+                ],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            }
+        },
+        {
+            "label": "3: Run (no debug)",
+            "type": "shell",
+            "command": "docker run --rm --privileged -v C:/Dev/code-test:/Dev/code-test gcc ./hello",
+            "group": "build",
+            "problemMatcher": []
+        }
+    ]
+}
